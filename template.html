@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+<style>
+html {
+  font-size: 62.5%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1.6rem;
+}
+.main-form {
+  padding: 1.5rem;
+  border-style: none;
+  border-color: red;
+  border-width: 0.2rem;
+  display: grid;
+}
+.main-form__dnd-area {
+  padding-top: calc(6.4rem - 1.8rem);
+  height: 6.4rem;
+  text-align: center;
+  line-height: 1.6rem;
+  border-style: solid;
+  border-width: 0.2rem;
+  border-radius: 1.6rem;
+  background: lightgrey;
+}
+/* D&Dにdnd-areaが反応しているかをインジケート */
+.main-form__dnd-area--draghover {
+  background: grey;
+}
+.main-form__dnd-area + .main-form__button-area {
+  margin-top: 0.8rem;
+}
+.main-form__button-area {
+  display: inline-block;
+  border-style: solid;
+  border-width: 0.1rem;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  padding: 0.2rem;
+}
+</style>
+</head>
+<body>
+<form action="{{ form-action }}" method="post" enctype="multipart/form-data">
+  <div class="main-form">
+    <div class="main-form__dnd-area">
+      ここにCSVファイルをドラッグ&amp;ドロップ
+    </div>
+    <div class="main-form__button-area">
+      または
+      <input class="main-form__file-button" type="file" name="csv-file">
+      <input class="main-form__submit-button" type="submit" value="Upload">
+      <input class="main-form__reset-button" type="reset" value="Reset">
+    </div>
+  </div>
+</form>
+<div class="svg-wrapper">
+  {{ svg }}
+</div>
+<script>
+  var dnd_area = document.querySelector('.main-form__dnd-area');
+  var file_button = document.querySelector('.main-form__file-button');
+  var submit_button = document.querySelector('.main-form__submit-button');
+  dnd_area.addEventListener('dragover', function(e) {
+    e.preventDefault();
+  });
+  var drag_enter_leave_count = 0;
+  dnd_area.addEventListener('dragenter', function(e) {
+    drag_enter_leave_count += 1;
+    dnd_area.classList.add('main-form__dnd-area--draghover');
+    e.preventDefault();
+  });
+  dnd_area.addEventListener('dragleave', function(e) {
+    drag_enter_leave_count -= 1;
+    if (drag_enter_leave_count === 0) {
+      dnd_area.classList.remove('main-form__dnd-area--draghover');
+    }
+    e.preventDefault();
+  });
+  dnd_area.addEventListener('drop', function(e) {
+    dnd_area.classList.remove('main-form__dnd-area--draghover');
+    drag_enter_leave_count = 0;
+    file_button.files = e.dataTransfer.files;
+    submit_button.click();
+    e.preventDefault();
+  });
+  submit_button.addEventListener('click', function(e) {
+    e.preventDefault();
+  });
+</script>
+</body>
+</html>
