@@ -18,7 +18,6 @@ def compile_template(fpath: str, **kwargs) -> str:
 
 class Handler(http.server.BaseHTTPRequestHandler):
     def __response_template(self, svg_string: str):
-        with # デフォルトsvgの挿入
         response = compile_template('template.html', encoded_svg=urllib.parse.quote(svg_string), svg=svg_string, form_action='/').encode()
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
