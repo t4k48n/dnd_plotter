@@ -5,12 +5,12 @@ import csv
 import numpy as np
 import cgi
 import matplotlib
-matplotlib.use("TkAgg")
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 def compile_template(fpath: str, **kwargs) -> str:
     pre_text = ''
-    with open(fpath, 'r') as template_file:
+    with open(fpath, 'r', encoding='utf-8') as template_file:
         pre_text = template_file.read()
     for key in kwargs:
         pre_text = pre_text.replace('{{{{ {} }}}}'.format(key), kwargs[key])
@@ -31,6 +31,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             length = int(self.headers.get('Content-length'))
             data = self.rfile.read(length)
             _, pdict = cgi.parse_header(self.headers['content-type'])
+            _, pdict = cgi.parse_header(self.headers['content-type'])
             pdict['boundary'] = pdict['boundary'].encode()
             csv_bytes = cgi.parse_multipart(io.BytesIO(data), pdict)['csv-file'][0]
             svg_str = svgstr_of_csvbytes(csv_bytes)
@@ -46,8 +47,6 @@ def svgstr_of_csvbytes(csv_bytes: bytes):
         a.plot(matrix)
         svg_str = io.StringIO()
         f.savefig(svg_str, format='svg', facecolor='lightgrey')
-    except:
-        print("?")
     finally:
         plt.close(f)
     return svg_str.getvalue()
