@@ -1,5 +1,6 @@
 import urllib
 import io
+import os
 import http.server
 import csv
 import numpy as np
@@ -7,6 +8,8 @@ import cgi
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+ROOT_DIR = os.getenv('ROOT_DIR', '/')
 
 def compile_template(fpath: str, **kwargs) -> str:
     pre_text = ''
@@ -18,7 +21,7 @@ def compile_template(fpath: str, **kwargs) -> str:
 
 class Handler(http.server.BaseHTTPRequestHandler):
     def __response_template(self, svg_string: str):
-        response = compile_template('template.html', encoded_svg=urllib.parse.quote(svg_string), svg=svg_string, form_action='/').encode()
+        response = compile_template('template.html', encoded_svg=urllib.parse.quote(svg_string), svg=svg_string, form_action=ROOT_DIR).encode()
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.send_header('Content-length', len(response))
