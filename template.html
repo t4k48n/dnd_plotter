@@ -101,6 +101,10 @@ body {
     submit_button.click();
     e.preventDefault();
   });
+  var svg_img = document.querySelector('.svg-wrapper > img');
+  svg_img.addEventListener('error', function(e) {
+    svg_img.style.display = 'none';
+  });
 </script>
 </body>
 </html>
