@@ -63,6 +63,12 @@ body {
   {{ svg }}
 </div>
 <script>
+  document.addEventListener('dragover', function(e) {
+    e.preventDefault();
+  });
+  document.addEventListener('drop', function(e) {
+    e.preventDefault();
+  });
   var dnd_area = document.querySelector('.main-form__dnd-area');
   var file_button = document.querySelector('.main-form__file-button');
   var submit_button = document.querySelector('.main-form__submit-button');
