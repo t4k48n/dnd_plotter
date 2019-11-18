@@ -44,7 +44,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
 def svgstr_of_csvbytes(csv_bytes: bytes):
     csv_filelike = io.StringIO(csv_bytes.decode())
-    matrix = np.loadtxt(csv_filelike, delimiter=',')
+    matrix = np.loadtxt(csv_filelike, delimiter=',', encoding='utf_8_sig')
     f, a = plt.subplots()
     try:
         a.plot(matrix)
