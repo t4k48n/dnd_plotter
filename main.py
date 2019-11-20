@@ -36,6 +36,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             _, pdict = cgi.parse_header(self.headers['content-type'])
             _, pdict = cgi.parse_header(self.headers['content-type'])
             pdict['boundary'] = pdict['boundary'].encode()
+            pdict['CONTENT-LENGTH'] = length
             csv_bytes = cgi.parse_multipart(io.BytesIO(data), pdict)['csv-file'][0]
             svg_str = svgstr_of_csvbytes(csv_bytes)
         except:
@@ -43,8 +44,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.__response_template(svg_str)
 
 def svgstr_of_csvbytes(csv_bytes: bytes):
-    csv_filelike = io.StringIO(csv_bytes.decode())
-    matrix = np.loadtxt(csv_filelike, delimiter=',', encoding='utf_8_sig')
+    csv_filelike = io.StringIO(csv_bytes.decode("utf_8_sig"))
+    matrix = np.loadtxt(csv_filelike, delimiter=',')
     f, a = plt.subplots()
     try:
         a.plot(matrix)
