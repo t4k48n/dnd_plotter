@@ -36,6 +36,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             _, pdict = cgi.parse_header(self.headers['content-type'])
             _, pdict = cgi.parse_header(self.headers['content-type'])
             pdict['boundary'] = pdict['boundary'].encode()
+            pdict['CONTENT-LENGTH'] = length
             csv_bytes = cgi.parse_multipart(io.BytesIO(data), pdict)['csv-file'][0]
             svg_str = svgstr_of_csvbytes(csv_bytes)
         except:
